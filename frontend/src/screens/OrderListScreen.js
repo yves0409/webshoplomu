@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import ReactPaginate from "react-paginate";
 import { listOrdersAdmin } from "../redux/actions/orderActions";
 import OrderListTable from "../components/OrderListTable";
+//import { ORDER_CREATE_RESET } from "../redux/types";
 
 const opacity = {
   backgroundColor: "rgba(245, 245, 245, 0.6)",
@@ -13,40 +14,32 @@ const opacity = {
 
 const OrderListScreen = ({ history }) => {
   const [currentPage, setCurrentPage] = useState(0);
-  const [data, setData] = useState([]);
   const [perPage] = useState(3);
 
   const dispatch = useDispatch();
 
   const orderListAdmin = useSelector((state) => state.orderListAdmin);
-  const { loading, error, orders } = orderListAdmin; //destructure and take nwhat we need out of the state
+  const { loading, error, orders } = orderListAdmin;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      getOrdersAdmin();
+      dispatch(listOrdersAdmin());
     } else {
       history.push("/login");
     }
   }, [dispatch, history, userInfo]);
 
-  const getOrdersAdmin = async () => {
-    //const res = await axios.get("/api/products");
-    dispatch(listOrdersAdmin());
-    const data = await orders;
-    console.log(data);
-    setData(data);
-  };
-
+  //PAGINATION
   const offset = currentPage * perPage;
-  const currentPageData = data
+  const currentPageData = orders
     .slice(offset, offset + perPage)
     .map((adminOrder) => (
       <OrderListTable key={adminOrder._id} adminOrder={adminOrder} />
     ));
-  const pageCount = Math.ceil(data.length / perPage);
+  const pageCount = Math.ceil(orders.length / perPage);
 
   //PAGE HANDLER
   const handlePageClick = (e) => {

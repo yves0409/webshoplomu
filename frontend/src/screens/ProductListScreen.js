@@ -21,7 +21,6 @@ const opacity = {
 const ProductListScreen = ({ history, match }) => {
   const keyword = match.params.keyword;
   const [currentPage, setCurrentPage] = useState(0);
-  const [data, setData] = useState([]);
   const [perPage] = useState(3);
 
   const dispatch = useDispatch();
@@ -50,7 +49,7 @@ const ProductListScreen = ({ history, match }) => {
   useEffect(() => {
     console.log("useEffect fired");
     dispatch({ type: PRODUCT_CREATE_RESET });
-    //dispatch(listProducts(keyword));
+
     if (!userInfo.isAdmin) {
       history.push("./login");
     }
@@ -58,8 +57,7 @@ const ProductListScreen = ({ history, match }) => {
     if (successCreate) {
       history.push(`/admin/product/${createdProduct._id}/edit`);
     } else {
-      getData();
-
+      dispatch(listProducts(keyword));
       console.log("getData is fired");
     }
   }, [
@@ -72,12 +70,9 @@ const ProductListScreen = ({ history, match }) => {
     keyword,
   ]);
 
-  const getData = async () => {
-    dispatch(listProducts(keyword));
-    const data = await products;
-    console.log(data);
-    setData(data);
-  };
+  // const getData = async () => {
+  //   dispatch(listProducts(keyword));
+  // };
 
   //DELETE HANDLER
   const deleteHandler = (id) => {
@@ -86,10 +81,11 @@ const ProductListScreen = ({ history, match }) => {
     }
   };
 
+  ////////PAGINATION///////////////////
+  console.log(products);
   const offset = currentPage * perPage;
-  const currentPageData = data
+  const currentPageData = products
     .slice(offset, offset + perPage)
-    // .sort((a, b) => a - b)
     .map((adminProduct) => (
       <ProductListTable
         key={adminProduct._id}
@@ -97,8 +93,7 @@ const ProductListScreen = ({ history, match }) => {
         deleteProduct={deleteHandler}
       />
     ));
-
-  const pageCount = Math.ceil(data.length / perPage);
+  const pageCount = Math.ceil(products.length / perPage);
 
   //CREATE HANDLER
   const createProductHandler = () => {
