@@ -1,6 +1,9 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
+import { OAuth2Client } from "google-auth-library";
+import fetch from "node-fetch";
+//import jwt from "jsonwebtoken";
 
 //Route : POST /api/users/login
 //What it does: fAuth user & getting a token
@@ -149,7 +152,7 @@ const updateUser = asyncHandler(async (req, res) => {
   if (user) {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-    // user.isAdmin = req.body.isAdmin;
+
     user.isAdmin =
       req.body.isAdmin === undefined ? user.isAdmin : req.body.isAdmin;
 
@@ -167,6 +170,109 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const googleLogin = asyncHandler(async (req, res) => {
+  const { idToken } = req.body;
+  client
+    .verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT_ID })
+    .then((response) => {
+      console.log("GOOGLE LOGIN RESPONSE", response);
+      const { email_verified, name, email } = response.payload;
+      console.log("=====>", response.payload);
+      if (email_verified) {
+        User.findOne({ email }).exec((err, user) => {
+          if (user) {
+            const { _id, name, email, isAdmin } = user;
+            return res.json({
+              _id,
+              name,
+              email,
+              isAdmin,
+              token: generateToken(user._id),
+            });
+          } else {
+            let password = email + process.env.JWT_SECRET;
+            user = new User({ name, email, password });
+            user.save((err, data) => {
+              if (err) {
+                console.log("ERROR GOOGLE LOGIN ON USER SAVE", err);
+                return res.status(400).json({
+                  error: "User signup failed with google",
+                });
+              }
+
+              const { _id, name, email, isAdmin } = data;
+              return res.json({
+                _id,
+                name,
+                email,
+                isAdmin,
+                token: generateToken(user._id),
+              });
+            });
+          }
+        });
+      } else {
+        return res.status(400).json({
+          error: "Google login failed. Try again",
+        });
+      }
+    });
+});
+
+const facebookLogin = asyncHandler(async (req, res) => {
+  console.log("FACEBOOK LOGIN REQ BODY", req.body);
+  const { userID, accessToken } = req.body;
+
+  const url = `https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`;
+
+  return fetch(url, {
+    method: "GET",
+  })
+    .then((response) => response.json())
+
+    .then((response) => {
+      const { email, name } = response;
+      User.findOne({ email }).exec((err, user) => {
+        if (user) {
+          const { _id, email, name, isAdmin } = user;
+          return res.json({
+            _id,
+            email,
+            name,
+            isAdmin,
+            token: generateToken(user._id),
+          });
+        } else {
+          let password = email + process.env.JWT_SECRET;
+          user = new User({ name, email, password });
+          user.save((err, data) => {
+            if (err) {
+              console.log("ERROR FACEBOOK LOGIN ON USER SAVE", err);
+              return res.status(400).json({
+                error: "User signup failed with facebook",
+              });
+            }
+
+            const { _id, email, name, isAdmin } = data;
+            return res.json({
+              _id,
+              email,
+              name,
+              isAdmin,
+              token: generateToken(user._id),
+            });
+          });
+        }
+      });
+    })
+    .catch((error) => {
+      res.json({
+        error: "Facebook login failed. Try later",
+      });
+    });
+});
+
 export {
   authUser,
   registerUser,
@@ -176,4 +282,6 @@ export {
   deleteUser,
   getUserById,
   updateUser,
+  googleLogin,
+  facebookLogin,
 };
