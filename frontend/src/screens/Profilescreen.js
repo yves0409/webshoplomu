@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Form, Button, Table } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import Notification from "../components/Notification";
-import Spinners from "../components/Spinners";
 import { useSelector, useDispatch } from "react-redux";
 import { USER_UPDATE_PROFILE_RESET } from "../redux/types";
 import {
@@ -10,13 +8,15 @@ import {
   updateUserProfile,
 } from "../redux/actions/userActions";
 import { listMyOrders } from "../redux/actions/orderActions";
+import Notification from "../components/Notification";
+import Spinners from "../components/Spinners";
+import moment from "moment";
 
 const opacity = {
   backgroundColor: "rgba(245, 245, 245, 0.6)",
 };
 
-const Profilescreen = ({ location, history }) => {
-  console.log("profilescreen loads");
+const Profilescreen = ({ history }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -50,7 +50,7 @@ const Profilescreen = ({ location, history }) => {
         setEmail(user.email);
       }
     }
-  }, [dispatch, history, userInfo, user, success]);
+  }, [dispatch, history, userInfo, user, success, orders]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -132,7 +132,7 @@ const Profilescreen = ({ location, history }) => {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Date</th>
+                <th>Order Date</th>
                 <th>Total</th>
                 <th>Paid</th>
                 <th>Delivered</th>
@@ -143,22 +143,16 @@ const Profilescreen = ({ location, history }) => {
               {orders.map((order) => (
                 <tr key={order._id}>
                   <td>{order._id}</td>
-                  <td>{order.createdAt.substring(0, 10)}</td>
+                  <td>{moment(order.createdAt).format("YYYY/MM/DD")}</td>
                   <td>{order.totalPrice}</td>
                   <td>
                     {order.isPaid ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          width: "130px",
-                        }}
-                      >
+                      <div>
                         <i
                           className="fas fa-check"
                           style={{ color: "green " }}
                         ></i>
-                        on {order.paidAt.substring(0, 10)}
+                        {moment(order.paidAt).format("YYYY/MM/DD")}
                       </div>
                     ) : (
                       <i className="fas fa-times" style={{ color: "red " }}></i>
@@ -166,7 +160,13 @@ const Profilescreen = ({ location, history }) => {
                   </td>
                   <td>
                     {order.isDelivered ? (
-                      order.deliveredAt.substring(0, 10)
+                      <div>
+                        <i
+                          className="fas fa-check"
+                          style={{ color: "green" }}
+                        ></i>
+                        {moment(order.deliveredAt).format("YYYY/MM/DD")}
+                      </div>
                     ) : (
                       <i className="fas fa-times" style={{ color: "red " }}></i>
                     )}
