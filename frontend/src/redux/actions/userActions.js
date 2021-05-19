@@ -28,6 +28,7 @@ import {
   USER_UPDATE_FAIL,
 } from "../types";
 
+///LOGIN ACTION///
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({
@@ -50,7 +51,7 @@ export const login = (email, password) => async (dispatch) => {
       type: USER_LOGIN_SUCCESS,
       payload: data,
     });
-
+    console.log("LOGINDATA==>", data);
     localStorage.setItem("userInfo", JSON.stringify(data)); //userInfo is the payload from the userReducer
   } catch (error) {
     dispatch({
@@ -63,6 +64,7 @@ export const login = (email, password) => async (dispatch) => {
   }
 };
 
+///LOGOUT ACTION///
 export const logout = () => (dispatch) => {
   localStorage.removeItem("userInfo");
   localStorage.removeItem("cartItems");
@@ -76,6 +78,7 @@ export const logout = () => (dispatch) => {
   document.location.href = "/login";
 };
 
+///REGISTER ACTION///
 export const register = (name, email, password) => async (dispatch) => {
   try {
     dispatch({
@@ -89,7 +92,7 @@ export const register = (name, email, password) => async (dispatch) => {
     };
 
     const { data } = await axios.post(
-      "/api/users", //route we created in backend to register
+      "/api/users",
       { name, email, password },
       config
     );
@@ -105,7 +108,7 @@ export const register = (name, email, password) => async (dispatch) => {
       payload: data,
     });
 
-    localStorage.setItem("userInfo", JSON.stringify(data)); //userInfo is the payload from the userReducer
+    localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,
@@ -117,6 +120,7 @@ export const register = (name, email, password) => async (dispatch) => {
   }
 };
 
+///USERDETAIL ACTION///
 export const getUserDetails = (id) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -125,7 +129,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
 
     const {
       userLogin: { userInfo },
-    } = getState(); //GGetting the userinfo from the state
+    } = getState();
 
     const config = {
       headers: {
@@ -135,7 +139,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
     };
 
     const { data } = await axios.get(
-      `/api/users/${id}`, //route we created in backend to DETAILS
+      `/api/users/${id}`,
 
       config
     );
@@ -155,6 +159,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
   }
 };
 
+///UPDATE USER ACTION///
 export const updateUserProfile = (user) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -163,7 +168,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
 
     const {
       userLogin: { userInfo },
-    } = getState(); //GGetting the userinfo from the state
+    } = getState();
 
     const config = {
       headers: {
@@ -195,6 +200,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
   }
 };
 
+///LIST OF ALL USERS///
 export const listUsers = () => async (dispatch, getState) => {
   try {
     dispatch({
@@ -203,7 +209,7 @@ export const listUsers = () => async (dispatch, getState) => {
 
     const {
       userLogin: { userInfo },
-    } = getState(); //GGetting the userinfo from the state
+    } = getState();
 
     const config = {
       headers: {
@@ -228,6 +234,7 @@ export const listUsers = () => async (dispatch, getState) => {
   }
 };
 
+///DELETE USER ACTION///
 export const deleteUser = (id) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -236,7 +243,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
 
     const {
       userLogin: { userInfo },
-    } = getState(); //GGetting the userinfo from the state
+    } = getState();
 
     const config = {
       headers: {
@@ -260,6 +267,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
   }
 };
 
+///UPDATE USER ACTION///
 export const updateUser = (user) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -268,7 +276,7 @@ export const updateUser = (user) => async (dispatch, getState) => {
 
     const {
       userLogin: { userInfo },
-    } = getState(); //GGetting the userinfo from the state
+    } = getState();
 
     const config = {
       headers: {
