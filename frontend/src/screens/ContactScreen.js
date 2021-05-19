@@ -45,6 +45,7 @@ const ContactScreen = () => {
   useEffect(() => {
     dispatch(contactList());
   }, [dispatch]);
+
   return (
     <>
       <h1 className="pb-4 mb-4">Information Page</h1>
