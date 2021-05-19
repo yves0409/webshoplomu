@@ -17,9 +17,6 @@ import {
   PRODUCT_UPDATE_SUCCESS,
   PRODUCT_UPDATE_FAIL,
   PRODUCT_UPDATE_RESET,
-  // PRODUCT_LIST_ADMIN_REQUEST,
-  // PRODUCT_LIST_ADMIN_SUCCESS,
-  // PRODUCT_LIST_ADMIN_FAIL,
   PRODUCT_REVIEW_REQUEST,
   PRODUCT_REVIEW_SUCCESS,
   PRODUCT_REVIEW_FAIL,
@@ -51,30 +48,6 @@ export const productListReducer = (state = { products: [] }, action) => {
       return state;
   }
 };
-
-//LIST ALL PRODUCTS FOR ADMIN
-// export const productListAdminReducer = (state = { products: [] }, action) => {
-//   switch (action.type) {
-//     case PRODUCT_LIST_ADMIN_REQUEST:
-//       return {
-//         loading: true,
-//         products: [],
-//       };
-//     case PRODUCT_LIST_ADMIN_SUCCESS:
-//       return {
-//         loading: false,
-//         products: action.payload,
-//       };
-//     case PRODUCT_LIST_ADMIN_FAIL:
-//       return {
-//         loading: false,
-//         error: action.payload,
-//       };
-
-//     default:
-//       return state;
-//   }
-// };
 
 //PRODUCTDETAILS
 export const productDetailReducer = (
@@ -201,7 +174,10 @@ export const productReviewReducer = (state = { product: {} }, action) => {
 };
 
 //REVIEW A PRODUCT
-export const productBestRatedReducer = (state = { products: [] }, action) => {
+export const productBestRatedReducer = (
+  state = { ratedproducts: [] },
+  action
+) => {
   switch (action.type) {
     case PRODUCT_BEST_RATED_REQUEST:
       return {
@@ -210,7 +186,7 @@ export const productBestRatedReducer = (state = { products: [] }, action) => {
     case PRODUCT_BEST_RATED_SUCCESS:
       return {
         loading: false,
-        products: action.payload,
+        ratedproducts: action.payload,
       };
     case PRODUCT_BEST_RATED_FAIL:
       return {
