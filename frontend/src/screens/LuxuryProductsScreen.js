@@ -6,8 +6,7 @@ import Spinners from "../components/Spinners";
 import Notification from "../components/Notification";
 import { Row, Col } from "react-bootstrap";
 
-const LuxuryProductsScreen = ({ match }) => {
-  //const keyword = match.params.keyword;
+const LuxuryProductsScreen = () => {
   const dispatch = useDispatch();
 
   const productList = useSelector((state) => state.productList);
@@ -16,7 +15,7 @@ const LuxuryProductsScreen = ({ match }) => {
   useEffect(() => {
     dispatch(listProducts());
   }, [dispatch]);
-  console.log(products);
+
   return (
     <>
       <h1>Luxury</h1>
