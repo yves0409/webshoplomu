@@ -70,7 +70,6 @@ export const getOrderDetail = (id) => async (dispatch, getState) => {
       userLogin: { userInfo },
     } = getState();
 
-    //this will place the content type and token in our headers when we send the request
     const config = {
       headers: {
         //"Content-Type": "application/json",
@@ -111,7 +110,6 @@ export const payOrder = (orderId, paymentResult) => async (
       userLogin: { userInfo },
     } = getState();
 
-    //this will place the content type and token in our headers when we send the request
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -193,7 +191,6 @@ export const listMyOrders = () => async (dispatch, getState) => {
       userLogin: { userInfo },
     } = getState();
 
-    //this will place the content type and token in our headers when we send the request
     const config = {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
@@ -230,7 +227,6 @@ export const listOrdersAdmin = () => async (dispatch, getState) => {
       userLogin: { userInfo },
     } = getState();
 
-    //this will place the content type and token in our headers when we send the request
     const config = {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
