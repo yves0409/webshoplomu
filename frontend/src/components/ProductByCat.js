@@ -2,7 +2,6 @@ import React from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import HoverRating from "./HoverRating";
-//import Rating from "./Rating";
 
 const Product = ({ product }) => {
   return (
@@ -27,7 +26,7 @@ const Product = ({ product }) => {
           <HoverRating value={product.rating} />
         </Card.Text>
 
-        <Card.Text as="h3">${product.price}</Card.Text>
+        <Card.Text as="p">${product.price}</Card.Text>
       </Card.Body>
     </Card>
   );

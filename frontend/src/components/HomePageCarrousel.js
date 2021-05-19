@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Carousel, Image } from "react-bootstrap";
 import Notification from "./Notification";
-
 import { listBestRatedProducts } from "../redux/actions/productActions";
 
 const opacity = {

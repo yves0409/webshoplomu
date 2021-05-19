@@ -1,12 +1,10 @@
 import React from "react";
-
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import Logo from "../bgim/logoNewWhite.png";
 import { MdInfoOutline, MdPersonOutline } from "react-icons/md";
 import { makeStyles } from "@material-ui/styles";
 import { IconContext } from "react-icons";
-
 import Badge from "@material-ui/core/Badge";
 import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
