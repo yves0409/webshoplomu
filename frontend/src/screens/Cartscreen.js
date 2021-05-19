@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -15,34 +15,17 @@ import { addToCart, removeFormCart } from "../redux/actions/cartActions";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 
 const Cartscreen = ({ match, location, history }) => {
-  const productId = match.params.id;
-
-  // GIVES YOU THE OUTPUT OF THE PATH AFTER THE QUESTION MARK
-  const qty = location.search ? Number(location.search.split("=")[1]) : 1;
-  //what split does here is give an array to split the querystring by the =
-  // so if the query is    ?qty=1    we have an array of [?qty , 1] ,
-  //since we need the id we need index 1 of the array , in this case 1
-
   const dispatch = useDispatch();
 
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
-  useEffect(() => {
-    if (productId) {
-      dispatch(addToCart(productId, qty));
-      console.log(history);
-      console.log(match);
-      console.log(location);
-    }
-  }, [dispatch, productId, qty, match, location, history]);
-
-  //REMOVE BUTTON FUNC CALL REMOVEFROMCARTACTION
+  //REMOVE BUTTON FUNC CALL REMOVEFROMCARTACTION//
   const removeFromCartHandler = (id) => {
     dispatch(removeFormCart(id));
   };
 
-  //CHECKOUT BUTTON FUNC
+  //CHECKOUT BUTTON FUNCTION///
   const checkoutHandler = () => {
     history.push("/shipping");
   };
