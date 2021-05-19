@@ -42,7 +42,7 @@ const EditProductScreen = ({ match, history }) => {
   useEffect(() => {
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
-      // dispatch({ type: PRODUCT_DETAIL_RESET });
+
       history.push("/admin/productlist");
     } else {
       if (!product.name || product._id !== productId) {
@@ -75,7 +75,6 @@ const EditProductScreen = ({ match, history }) => {
       setImage(data);
       setUploading(false);
     } catch (error) {
-      console.error(error);
       setUploading(false);
     }
   };
@@ -171,15 +170,7 @@ const EditProductScreen = ({ match, history }) => {
 
             <Form.Group controlId="category">
               <Form.Label>Category</Form.Label>
-              {/* <Form.Control
-                type="text"
-                placeholder="Enter category"
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                <option value={category}>Fruity</option>
-                <option value={category}>Casual</option>
-                <option value={category}>Luxury</option> 
-              </Form.Control>  */}
+
               <Form.Control
                 as="select"
                 value={category}
