@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { listOrdersAdmin } from "../redux/actions/orderActions";
+import ReactPaginate from "react-paginate";
 import Notification from "../components/Notification";
 import Spinners from "../components/Spinners";
-import { useSelector, useDispatch } from "react-redux";
-import ReactPaginate from "react-paginate";
-import { listOrdersAdmin } from "../redux/actions/orderActions";
 import OrderListTable from "../components/OrderListTable";
-//import { ORDER_CREATE_RESET } from "../redux/types";
+import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 
 const opacity = {
   backgroundColor: "rgba(245, 245, 245, 0.6)",
@@ -47,9 +47,18 @@ const OrderListScreen = ({ history }) => {
     setCurrentPage(selectedPage);
   };
 
+  //GOBACKHANDLER//
+  const goBack = () => {
+    history.goBack();
+  };
+
   return (
     <>
       <h1>Orders</h1>
+      <KeyboardBackspaceIcon
+        className="bg-dark text-white rounded mb-2"
+        onClick={goBack}
+      />
       {loading ? (
         <Spinners />
       ) : error ? (
@@ -68,10 +77,9 @@ const OrderListScreen = ({ history }) => {
               <tr>
                 <th>ID</th>
                 <th>USERNAME</th>
-                <th>DATE</th>
-                <th>TOTAL</th>
-                <th>PAID</th>
-                <th>DELIVERED</th>
+                <th>ORDER DATE</th>
+                <th>PAID ON</th>
+                <th>DELIVERED ON</th>
               </tr>
             </thead>
             <tbody>{currentPageData}</tbody>
