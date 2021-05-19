@@ -4,7 +4,6 @@ import { Form, Button } from "react-bootstrap";
 import Notification from "../components/Notification";
 import Spinners from "../components/Spinners";
 import FormContainer from "../components/FormContainer";
-//REDUX
 import { useSelector, useDispatch } from "react-redux";
 import { getUserDetails, updateUser } from "../redux/actions/userActions";
 import { USER_UPDATE_RESET } from "../redux/types";
