@@ -18,7 +18,6 @@ import { logout } from "../redux/actions/userActions";
 const useStyles = makeStyles({
   root: {
     fontSize: "12px",
-    // textTransform: "uppercase",
     color: "grey",
     marginleft: "0px",
   },
