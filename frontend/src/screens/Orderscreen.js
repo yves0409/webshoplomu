@@ -3,41 +3,34 @@ import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
 import { Row, Col, Image, Card, ListGroup, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-//COMPONENTS
 import Notification from "../components/Notification";
 import Spinners from "../components/Spinners";
-//REDUX
 import { useDispatch, useSelector } from "react-redux";
 import {
   getOrderDetail,
   payOrder,
   deliverOrder,
 } from "../redux/actions/orderActions";
+import moment from "moment";
+import Alert from "@material-ui/lab/Alert";
+
 import { ORDER_PAY_RESET, ORDER_DELIVER_RESET } from "../redux/types";
 
 const Orderscreen = ({ match, history }) => {
-  //Grab the id from the params
   const orderId = match.params.id;
-
-  //paypal
   const [sdkready, setSdkReady] = useState(false);
 
-  //redux..
   const dispatch = useDispatch();
 
-  //Grabbing the orderCreate from the state and destructure order,success and error
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
 
-  //Grabbing the orderPay from the state and destructure AND rename order,success and loading
   const orderPay = useSelector((state) => state.orderPay);
   const { succes: successPay, loading: loadingPay } = orderPay;
 
-  //Grabbing the orderPay from the state and destructure AND rename order,success and loading
   const orderDeliver = useSelector((state) => state.orderDeliver);
   const { succes: successDeliver, loading: loadingDeliver } = orderDeliver;
 
-  //Grabbing the orderPay from the state and destructure AND rename order,success and loading
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
@@ -45,7 +38,7 @@ const Orderscreen = ({ match, history }) => {
     const addDecimals = (num) => {
       return (Math.round(num * 100) / 100).toFixed(2);
     };
-    //Calculate \Total Price Item before tax/shipping
+    //CALCULATE TOTAL PRICE ORDER///
     order.itemsPrice = addDecimals(
       order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0)
     );
@@ -55,6 +48,8 @@ const Orderscreen = ({ match, history }) => {
     if (!userInfo) {
       history.push("/login");
     }
+
+    ///PAYPAL///
     const addPaypalScript = async () => {
       const { data: clientId } = await axios.get("/api/config/paypal");
       const script = document.createElement("script");
@@ -79,13 +74,15 @@ const Orderscreen = ({ match, history }) => {
         setSdkReady(true);
       }
     }
-  }, [dispatch, order, orderId, successPay, successDeliver, history, userInfo]);
+    // eslint-disable-next-line
+  }, [dispatch, orderId, successPay, successDeliver, order]);
 
+  ///SUCCESS PAYMENT///
   const successPaymentHandler = (paymentResult) => {
-    console.log(paymentResult);
     dispatch(payOrder(orderId, paymentResult));
   };
 
+  ///MARK AS DELIVERED///
   const deliverHandler = () => {
     dispatch(deliverOrder(order));
   };
@@ -115,11 +112,11 @@ const Orderscreen = ({ match, history }) => {
                 {order.shippingAdress.country}
               </p>
               {order.isDelivered ? (
-                <Notification variant="success">
-                  Delivered On {order.deliveredAt}
-                </Notification>
+                <Alert severity="success">
+                  Delivered On {moment(order.deliveredAt).format("LLLL")}
+                </Alert>
               ) : (
-                <Notification variant="danger">Not Delivered Yet</Notification>
+                <Alert severity="error">Not Delivered Yet</Alert>
               )}
             </ListGroup.Item>
 
@@ -130,11 +127,11 @@ const Orderscreen = ({ match, history }) => {
                 {order.paymentMethod}
               </p>
               {order.isPaid ? (
-                <Notification variant="success">
-                  Paid On {order.paidAt}
-                </Notification>
+                <Alert severity="success">
+                  Paid on {moment(order.paidAt).format("LLLL")}
+                </Alert>
               ) : (
-                <Notification variant="danger">Not Paid Yet</Notification>
+                <Alert severity="error">Not Paid Yet</Alert>
               )}
             </ListGroup.Item>
 
