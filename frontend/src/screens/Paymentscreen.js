@@ -6,18 +6,15 @@ import CheckoutSteps from "../components/CheckoutSteps";
 import { savePaymentMethod } from "../redux/actions/cartActions";
 
 const Paymentscreen = ({ history }) => {
-  //bring in the shippingadress
+  const [paymentMethod, setPaymentMethod] = useState("paypal");
+  const dispatch = useDispatch();
+
   const cart = useSelector((state) => state.cart);
   const { shippingAdress } = cart;
 
   if (!shippingAdress) {
     history.push("/shipping");
   }
-
-  //setting paypal to the default payment method
-  const [paymentMethod, setPaymentMethod] = useState("paypal");
-
-  const dispatch = useDispatch();
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -44,14 +41,6 @@ const Paymentscreen = ({ history }) => {
               checked
               onChange={(e) => setPaymentMethod(e.target.value)}
             ></Form.Check>
-            {/* <Form.Check
-              type="radio"
-              label="Stripe"
-              id="Stripe"
-              name="paymentMethod"
-              value="Stripe"
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            ></Form.Check> */}
           </Col>
         </Form.Group>
         <Button type="submit" variant="primary">
