@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Route } from "react-router-dom";
 import { Table, Button, Row, Col } from "react-bootstrap";
-import Notification from "../components/Notification";
-import Spinners from "../components/Spinners";
-import Search from "../components/Search";
 import { useSelector, useDispatch } from "react-redux";
 import {
   listProducts,
@@ -12,6 +9,10 @@ import {
 } from "../redux/actions/productActions";
 import { PRODUCT_CREATE_RESET } from "../redux/types";
 import ReactPaginate from "react-paginate";
+import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
+import Search from "../components/Search";
+import Notification from "../components/Notification";
+import Spinners from "../components/Spinners";
 import ProductListTable from "../components/ProductListTable";
 
 const opacity = {
@@ -47,7 +48,6 @@ const ProductListScreen = ({ history, match }) => {
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    console.log("useEffect fired");
     dispatch({ type: PRODUCT_CREATE_RESET });
 
     if (!userInfo.isAdmin) {
@@ -58,7 +58,6 @@ const ProductListScreen = ({ history, match }) => {
       history.push(`/admin/product/${createdProduct._id}/edit`);
     } else {
       dispatch(listProducts(keyword));
-      console.log("getData is fired");
     }
   }, [
     dispatch,
@@ -70,10 +69,6 @@ const ProductListScreen = ({ history, match }) => {
     keyword,
   ]);
 
-  // const getData = async () => {
-  //   dispatch(listProducts(keyword));
-  // };
-
   //DELETE HANDLER
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure you wanna delete this product?")) {
@@ -82,7 +77,6 @@ const ProductListScreen = ({ history, match }) => {
   };
 
   ////////PAGINATION///////////////////
-  console.log(products);
   const offset = currentPage * perPage;
   const currentPageData = products
     .slice(offset, offset + perPage)
@@ -106,11 +100,21 @@ const ProductListScreen = ({ history, match }) => {
     setCurrentPage(selectedPage);
   };
 
+  //GOBACKHANDLER//
+  const goBack = () => {
+    history.goBack();
+  };
+
   return (
     <>
       <Row className="align-items-center">
         <Col>
           <h1>Products</h1>
+          <KeyboardBackspaceIcon
+            className="bg-dark text-white rounded mb-2"
+            onClick={goBack}
+          />
+
           <Route render={({ history }) => <Search history={history} />} />
         </Col>
         <Col className="text-right">
