@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import moment from "moment";
 
 const OrderListTable = ({ adminOrder }) => {
   return (
@@ -8,10 +9,11 @@ const OrderListTable = ({ adminOrder }) => {
       <td>{adminOrder._id}</td>
 
       <td>{adminOrder.user && adminOrder.user.name}</td>
-      <td>{adminOrder.createdAt.substring(0, 10)}</td>
+
+      <td>{moment(adminOrder.createdAt).format("YYYY/MM/DD")}</td>
       <td>
         {adminOrder.isPaid ? (
-          adminOrder.paidAt.substring(0, 10)
+          moment(adminOrder.paidAt).format("YYYY/MM/DD")
         ) : (
           <i className="fas fa-times" style={{ color: "red" }}></i>
         )}
@@ -19,7 +21,7 @@ const OrderListTable = ({ adminOrder }) => {
       <td>
         {" "}
         {adminOrder.isDelivered ? (
-          adminOrder.deliveredAt.substring(0, 10)
+          moment(adminOrder.deliveredAt).format("YYYY/MM/DD")
         ) : (
           <i className="fas fa-times" style={{ color: "red" }}></i>
         )}
