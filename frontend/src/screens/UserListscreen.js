@@ -3,10 +3,9 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button } from "react-bootstrap";
 import Notification from "../components/Notification";
 import Spinners from "../components/Spinners";
-
-//REDUX
 import { useSelector, useDispatch } from "react-redux";
 import { listUsers, deleteUser } from "../redux/actions/userActions";
+import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 
 const opacity = {
   backgroundColor: "rgba(245, 245, 245, 0.6)",
@@ -16,7 +15,7 @@ const UserListscreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const userList = useSelector((state) => state.userList);
-  const { loading, error, users } = userList; //destructure and take nwhat we need out of the state
+  const { loading, error, users } = userList;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -27,6 +26,7 @@ const UserListscreen = ({ history }) => {
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(listUsers());
+      console.log(userInfo);
     } else {
       history.push("/login");
     }
@@ -38,9 +38,17 @@ const UserListscreen = ({ history }) => {
     }
   };
 
+  const goBack = () => {
+    history.goBack();
+  };
+
   return (
     <>
       <h1>Users</h1>
+      <KeyboardBackspaceIcon
+        className="bg-dark text-white rounded mb-2"
+        onClick={goBack}
+      />
       {loading ? (
         <Spinners />
       ) : error ? (
