@@ -15,6 +15,7 @@ import {
   listProductsDetail,
   createReview,
 } from "../redux/actions/productActions";
+import { addToCart } from "../redux/actions/cartActions";
 import { PRODUCT_CREATE_RESET } from "../redux/types";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import FormatQuoteIcon from "@material-ui/icons/FormatQuote";
@@ -29,7 +30,6 @@ const Productscreen = ({ history, match }) => {
 
   const dispatch = useDispatch();
 
-  //productDetails is defined in the redux store
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
@@ -49,12 +49,13 @@ const Productscreen = ({ history, match }) => {
     dispatch(listProductsDetail(match.params.id));
   }, [dispatch, match, successReview]);
 
-  //redirect to cart page after onclick `add to cart`
-  //grabbing the id from match.params which is defined above in the productscreen function
+  ///ADD TO CART///
   const addToCartHandler = () => {
-    history.push(`/cart/${match.params.id}?qty=${qty}`);
+    dispatch(addToCart(product._id, qty));
+    history.push("/cart");
   };
 
+  ///SUBMIT RATING FORM///
   const submitFormHandler = (e) => {
     e.preventDefault();
     dispatch(createReview(match.params.id, { rating, comment }));
@@ -194,7 +195,7 @@ const Productscreen = ({ history, match }) => {
                   <ListGroup.Item key={review._id}>
                     <strong>{review.name}</strong>
                     <Rating value={review.rating} />
-                    {/* <p>{review.createdAt.substring(0, 10)}</p> */}
+
                     <p>{review.comment}</p>
                   </ListGroup.Item>
                 ))}
