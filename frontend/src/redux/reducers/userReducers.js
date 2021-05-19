@@ -36,7 +36,7 @@ export const userLoginReducer = (state = {}, action) => {
     case USER_LOGIN_SUCCESS:
       return {
         loading: false,
-        userInfo: action.payload, //See userController (userInfo: _id,name,email,isAdmin)
+        userInfo: action.payload,
       };
     case USER_LOGIN_FAIL:
       return {
@@ -59,7 +59,7 @@ export const userRegisterReducer = (state = {}, action) => {
     case USER_REGISTER_SUCCESS:
       return {
         loading: false,
-        userInfo: action.payload, //See userController (userInfo: _id,name,email,isAdmin)
+        userInfo: action.payload,
       };
     case USER_REGISTER_FAIL:
       return {
@@ -121,7 +121,7 @@ export const userUpdateProfileReducer = (state = {}, action) => {
 export const userListReducer = (state = { users: [] }, action) => {
   switch (action.type) {
     case USER_LIST_REQUEST:
-      return { loading: true };
+      return { loading: true, users: [] };
     case USER_LIST_SUCCESS:
       return { loading: false, users: action.payload };
     case USER_LIST_FAIL:
