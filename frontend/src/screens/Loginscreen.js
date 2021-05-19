@@ -7,6 +7,9 @@ import FormContainer from "../components/FormContainer";
 import Alert from "@material-ui/lab/Alert";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../redux/actions/userActions";
+import Google from "../Google";
+import Facebook from "../Facebook";
+import { USER_LOGIN_SUCCESS } from "../redux/types";
 
 const Loginscreen = ({ location, history }) => {
   const [email, setEmail] = useState("");
@@ -31,6 +34,32 @@ const Loginscreen = ({ location, history }) => {
     dispatch(login(email, password));
   };
 
+  const googleLog = (response) => {
+    console.log("googlelogin response =>", response.isAdmin);
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: response,
+    });
+
+    if (dispatch) {
+      const push = history.push;
+      setTimeout(() => push(redirect), 2000);
+    }
+  };
+
+  const facebookLog = (response) => {
+    console.log("googlelogin response =>", response);
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: response,
+    });
+
+    if (dispatch) {
+      const push = history.push;
+      setTimeout(() => push(redirect), 2000);
+    }
+  };
+
   return (
     <FormContainer>
       <h1>Sign In</h1>
@@ -38,6 +67,9 @@ const Loginscreen = ({ location, history }) => {
 
       {error && <Notification variant="danger">{error}</Notification>}
       {loading && <Spinners />}
+      <Google googleLog={googleLog} />
+      <Facebook facebookLog={facebookLog} />
+
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="email">
           <Form.Label>Email Adress</Form.Label>
@@ -62,6 +94,7 @@ const Loginscreen = ({ location, history }) => {
           Submit
         </Button>
       </Form>
+
       <Row className="py-3 bg-warning my-2 rounded">
         <Col>
           New to LoMu ?{" "}
