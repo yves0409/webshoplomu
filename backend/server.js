@@ -15,11 +15,19 @@ import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 import uploadedFilesRoutes from "./routes/uploadedFilesRoutes.js";
+import cors from "cors";
+const corsOptions = {
+  origin: "http://localhost:5000",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
 
 dotenv.config();
 
 connectDB();
 const app = express();
+
+app.use(cors(corsOptions));
 
 //Gives you a log of the endpoints you hit
 if (process.env.NODE_ENV === "development") {
