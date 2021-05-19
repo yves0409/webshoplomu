@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-//import axios from "axios";
+import axios from "axios";
 import { listProducts } from "../redux/actions/productActions";
 import Product from "../components/Product";
 import Spinners from "../components/Spinners";
@@ -13,9 +13,9 @@ import Fade from "@material-ui/core/Fade";
 
 const Homescreen = () => {
   const [checked, setChecked] = useState(false);
-  //const [location, setLocation] = useState("");
-  //const [weather, setWeather] = useState("");
-  //const [main, setMain] = useState("");
+  const [location, setLocation] = useState("");
+  const [weather, setWeather] = useState("");
+  const [main, setMain] = useState("");
 
   const dispatch = useDispatch();
 
@@ -25,58 +25,58 @@ const Homescreen = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  // const getIP = "http://ip-api.com/json/";
-  // axios.get(getIP).then(function (location) {
-  //   const { data } = location;
-  //   const { lat } = data;
-  //   const { lon } = data;
-  //   // console.log(data);
-  //   // console.log(city);
-  //   // console.log(city);
-  //   // setCity(city);
-  //   console.log(lat);
-  //   console.log(lon);
-  //   setLat(lat);
-  //   setLon(lon);
-  // });
+  const getWeather = () => {
+    const getIP = "http://ip-api.com/json/";
+    axios.get(getIP).then(function (location) {
+      const { data } = location;
+      const { lat } = data;
+      const { lon } = data;
 
-  // const getWeather = () => {
-  //   axios
-  //     .get(
-  //       `https://api.openweathermap.org/data/2.5/weather?q=los angeles,usa&APPID=4acff4d95a04850e4a07adab2280a0c8&units=metric`
-  //     )
-  //     .then((response) => {
-  //       const { data } = response;
-  //       const { icon } = data.weather[0];
+      axios
+        .get(
+          `${process.env.REACT_APP_WEATHER_URL}lat=${lat}&lon=${lon}&APPID=${process.env.REACT_APP_WEATHER_APPID}`
+        )
+        .then((response) => {
+          const { data } = response;
+          const { icon } = data.weather[0];
 
-  //       setLocation(data);
-  //       setWeather(icon);
-  //       setMain(data.main);
-  //     });
-  // };
+          setLocation(data);
+          setWeather(icon);
+          setMain(data.main);
+        });
+    });
+  };
 
   useEffect(() => {
     dispatch(listProducts());
-    //getWeather();
+    getWeather();
   }, [dispatch]);
 
   const handleChange = () => {
     setChecked((prev) => !prev);
   };
 
+  const { temp } = main;
+  const fix = temp !== undefined ? temp.toFixed(1) : null;
+
   return (
     <>
-      {/* <div>
-        <div id="demo"></div>
-        <h6 style={{ margin: "0 0 0 15px" }}>{location.name}</h6>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <img
-            src={`http://openweathermap.org/img/w/${weather}.png`}
-            alt="weather"
-          />
-          <p style={{ marginBottom: "0px" }}>{main.temp}&#176;C</p>
+      {!location.name ? (
+        <Spinners />
+      ) : (
+        <div>
+          <div id="demo"></div>
+          <h6 style={{ margin: "0 0 0 15px" }}>{location.name}</h6>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <img
+              src={`http://openweathermap.org/img/w/${weather}.png`}
+              alt="weather"
+            />
+            <p style={{ marginBottom: "0px" }}>{fix}&#176;C</p>
+          </div>
         </div>
-      </div> */}
+      )}
+
       <Carrousel />
 
       <h1>Candles Made With Passion</h1>
